@@ -1,21 +1,27 @@
-const redux = require('redux');
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { decrementing, incrementing, logining } from './actions';
 
-// Reducer is pure function and taken currentState  and  action. then return currentState value
-const rootReducer = (currentState = 0, action) => {
-  switch (action.type) {
-    case 'INCREMENT':
-      return currentState + 1;
-    case 'DECREMENT':
-      return currentState - 1;
-    default:
-      return currentState;
+function App() {
+  const counter = useSelector(state=>state.countersss)
+  const login = useSelector(state=>state.login)
+  const dispatch = useDispatch();
+  let SIGN_IN = '';
+  if(login){
+    SIGN_IN = 'Login'
   }
-};
+  else{
+    SIGN_IN = 'Logout'
+  }
+  return (
+    <div>
+      <h1>Baisc Redux</h1>
+      <h1>counter: {counter}</h1>
+      <button onClick={()=>{dispatch(incrementing())}}>Increment</button>
+      <button onClick={()=>{dispatch(decrementing())}}>Increment</button>
+      <button onClick={()=>{dispatch(logining())}}>{SIGN_IN}</button>
+    </div>
+  )
+}
 
-// Create a Store...
-const store = redux.createStore(rootReducer);
-console.log('initial State =======>', store.getState());
-
-// Dispatch actions...
-store.dispatch({ type: 'INCREMENT' });
-console.log('state after INCREMENT =======>', store.getState());
+export default App
