@@ -12,4 +12,4 @@ export const islogin =()=>{
     return{
         type:'LOGIN'
     }
-}  
+}   
