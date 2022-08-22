@@ -1,57 +1,28 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { Provider } from 'react-redux';
-import { applyMiddleware, legacy_createStore } from 'redux';
-import App from './App';
-import allReducers from './reducers'
-const root = ReactDOM.createRoot(document.getElementById('root'));
-//middleware
-const firstMiddleware = (store) => {
-  return (next) => {
-    return (action) => {
-      console.log('WE ARE FIRST MIIDDLEWARE')
-      return next(action)
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import { applyMiddleware, legacy_createStore } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
+import logger from "redux-logger";
+import thunk from "redux-thunk";
+import App from './App'
+import reducer from './reducers'
 
-    }
+const container = document.getElementById('root');
+const root = ReactDOM.createRoot(container);
 
-  } 
 
-}
-//middleware SHORT 
-const secondMiddleware = (store) => (next) => (action) => {
-  console.log('WE ARE SECOND MIIDDLEWARE')
-  return next(action)
-}
-
-//middleware INCREMENT 
-const startAtPoint = (store) => (next) => (action) => {
-  console.log('WE ARE THIRD MIIDDLEWARE')
-  // console.log('WE ARE THIRD MIIDDLEWARE',action)
-  // console.log('WE ARE THIRD MIIDDLEWARE',next)
-  // console.log('store ', store)
-  if (store.getState().counter >= 50) {
-    return next({
-      type:'DECREMENT'
-    })
-  }
-  return next(action)
-}
 
 const store = legacy_createStore(
-  allReducers,
-  applyMiddleware(
-    firstMiddleware,
-    secondMiddleware, 
-    startAtPoint
+    reducer,
+    composeWithDevTools(
+        applyMiddleware(thunk, logger)
     )
-    // ,
-  //window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
-
-
 root.render(
-  <Provider store={store}>
-    <App />
-  </Provider>
+    <Provider store={store}>
+        <React.StrictMode>
+            <App />
+        </React.StrictMode>
+    </Provider>
 );
-
